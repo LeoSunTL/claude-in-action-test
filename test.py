@@ -2,7 +2,7 @@ import random
 
 
 def greet(name):
-    return f"Hello, {name}!"
+    return f"What's up, {name}!"
 
 
 def roll_dice(sides=6):
@@ -15,9 +15,9 @@ def fizzbuzz(n):
         if i % 15 == 0:
             results.append("FizzBuzz")
         elif i % 3 == 0:
-            results.append("Fizz")
+            results.append("Fizzing")
         elif i % 5 == 0:
-            results.append("Buzz")
+            results.append("Buzzing")
         else:
             results.append(str(i))
     return results
