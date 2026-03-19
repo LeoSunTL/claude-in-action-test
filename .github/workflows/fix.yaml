@@ -4,7 +4,7 @@ on:
     types: [created]
 
 jobs:
-  review:
+  fix:
     if: contains(github.event.comment.body, '@claude')
     runs-on: ubuntu-latest
     env:
