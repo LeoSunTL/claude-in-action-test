@@ -1,0 +1,46 @@
+name: Claude Auto Fix
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  review:
+    if: contains(github.event.comment.body, '@claude')
+    runs-on: ubuntu-latest
+    env:
+      API_TIMEOUT_MS: 3000000
+      ANTHROPIC_BASE_URL: ${{ secrets.ANTHROPIC_BASE_URL }}
+      ANTHROPIC_AUTH_TOKEN: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_AUTH_TOKEN }}
+          prompt: |
+            REPO: ${{ github.repository }}
+            ISSUE NUMBER: ${{ github.event.issue.number }}
+            ISSUE TITLE: ${{ github.event.issue.title }}
+            ISSUE BODY: ${{ github.event.issue.body }}
+            COMMENT BODY: ${{ github.event.comment.body }}
+
+            You are an automated issue fixer. Read the issue description and the comment that triggered you (the one containing @claude) to understand what needs to be fixed.
+
+            Steps:
+            1. Use `gh issue view ${{ github.event.issue.number }}` to get full issue details and all comments for additional context.
+            2. Analyze the issue and determine the fix.
+            3. Implement the fix in the codebase.
+            4. Create a new branch, commit the changes, and open a pull request that references the issue.
+
+            Branch naming: use `fix/issue-${{ github.event.issue.number }}` as the branch name.
+            In the PR description, include `Closes #${{ github.event.issue.number }}` so the issue is automatically closed when merged.
+
+          claude_args: |
+            --allowedTools "Bash(git:*),Bash(gh issue:*),Bash(gh pr create:*),Read,Write,Edit,Glob,Grep"
