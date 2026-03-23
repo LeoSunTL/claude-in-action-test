@@ -5,7 +5,7 @@ on:
 
 jobs:
   fix:
-    if: contains(github.event.comment.body, '@claude')
+    # if: contains(github.event.comment.body, '@claude')
     runs-on: self-hosted
     env:
       API_TIMEOUT_MS: 3000000
