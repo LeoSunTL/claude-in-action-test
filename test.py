@@ -2,7 +2,7 @@ import random
 
 
 def greet(name):
-    return f"Hello, {name}!"
+    return f"BoBoBo, {name}!"
 
 
 def roll_dice(sides=6):
